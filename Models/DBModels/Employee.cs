@@ -1,4 +1,4 @@
-﻿namespace CrudApi.Models
+﻿namespace CrudApi.Models.DBModels
 {
     public class Employee
     {

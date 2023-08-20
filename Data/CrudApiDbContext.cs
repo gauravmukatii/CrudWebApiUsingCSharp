@@ -1,4 +1,4 @@
-﻿using CrudApi.Models;
+﻿using CrudApi.Models.DBModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
