@@ -9,6 +9,7 @@ namespace CrudApi.Repository.Services
     {
         public EmployeeRepository(CrudApiDbContext dbContext) : base(dbContext)
         {
+
         }
     }
 }

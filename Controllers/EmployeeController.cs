@@ -12,20 +12,17 @@ namespace CrudApi.Controllers
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IUnitOfWork unitOfWork)
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _employeeRepository = employeeRepository;
-            _unitOfWork = unitOfWork;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
         public IActionResult GetAllEmployees()
         {
-            //var employees = _employeeRepository.GetAll();
-            IEnumerable<Employee> employees = _employeeRepository.GetAll();
+            IEnumerable<Employee> employees = _employeeService.GetAllEmployees();
             return Ok(employees);
         }
 
@@ -34,7 +31,7 @@ namespace CrudApi.Controllers
         [Route("{id:guid}")]
         public IActionResult GetEmployeeById(Guid id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employee = _employeeService.GetEmployeeById(id);
 
             if (employee == null)
             {
@@ -47,58 +44,41 @@ namespace CrudApi.Controllers
         [HttpPost]
         public IActionResult AddEmployee(AddEmployeeRequest addEmployeeRequest)
         {
-            var employee = new Employee
-           {
-               Id = Guid.NewGuid(),
-                Name = addEmployeeRequest.Name,
-               Email = addEmployeeRequest.Email,
-               DOB = addEmployeeRequest.DOB.Date,
-              CreatedDate = DateTime.Now,
-              UpdatedDate = DateTime.Now
-           };
+            _employeeService.AddEmployee(addEmployeeRequest);
 
-         _employeeRepository.Add(employee);
-         _unitOfWork.SaveChanges();
-
-         return Ok(employee);
+            return Ok("Employee Added Successfully");
         }
 
         [HttpPut]
         [Route("{id:guid}")]
         public IActionResult UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
-            var employee = _employeeRepository.GetById(id);
+            var isUpdated = _employeeService.UpdateEmployee(id, updateEmployeeRequest);
 
-            if (employee != null)
+            if (isUpdated)
             {
-                employee.Name = updateEmployeeRequest.Name;
-                employee.Email = updateEmployeeRequest.Email;
-                employee.DOB = updateEmployeeRequest.DOB.Date;
-                employee.UpdatedDate = DateTime.Now;
-
-                _employeeRepository.Update(employee);
-                _unitOfWork.SaveChanges();
-
-                return Ok(employee);
+                return Ok("Employee Updated successfully");
             }
-
-            return NotFound();
+            else
+            {
+                return NotFound("Employee not found");
+            }
         }
 
         [HttpDelete]
         [Route("{id:guid}")]
         public IActionResult DeleteEmployee(Guid id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var isDeleted = _employeeService.DeleteEmployee(id);
 
-            if (employee != null)
+            if (isDeleted)
             {
-                _employeeRepository.Delete(employee);
-                _unitOfWork.SaveChanges();
-                return Ok(employee);
+                return Ok("Employee deleted successfully");
             }
-
-            return NotFound();
+            else
+            {
+                return NotFound("Employee not found");
+            }
         }  
     }
 }

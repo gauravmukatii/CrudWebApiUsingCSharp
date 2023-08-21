@@ -5,16 +5,19 @@ namespace CrudApi.Repository.Services
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly CrudApiDbContext _dbcontext;
+        private readonly CrudApiDbContext _dbContext;
 
-        public UnitOfWork(CrudApiDbContext dbcontext)
+        public UnitOfWork(CrudApiDbContext dbContext)
         {
-            _dbcontext = dbcontext;
+            _dbContext = dbContext;
+            EmployeeRepository = new EmployeeRepository(_dbContext);
         }
+
+        public IEmployeeRepository EmployeeRepository { get;  }
 
         public void SaveChanges()
         {
-            _dbcontext.SaveChanges();
+            _dbContext.SaveChanges();
         }
     }
 }
