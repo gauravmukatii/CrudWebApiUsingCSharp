@@ -1,5 +1,6 @@
 using CrudApi.Data;
 using CrudApi.Models;
+using CrudApi.Models.DBModels;
 using CrudApi.Repository.Interfaces;
 using CrudApi.Repository.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,9 @@ builder.Services.AddDbContext<CrudApiDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CrudApiConnectionString")));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 //builder.Services.AddScoped<IRepository<Employee>, Repository<Employee>>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
 var app = builder.Build();
